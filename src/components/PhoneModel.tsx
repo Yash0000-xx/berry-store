@@ -61,7 +61,7 @@ const BerryLogo = () => (
 // ==========================================
 export default function PhoneModel() {
   const [isFlipped, setIsFlipped] = useState(false);
-  const [signalStrength, setSignalStrength] = useState(4);
+  const [, setSignalStrength] = useState(4);
 
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
