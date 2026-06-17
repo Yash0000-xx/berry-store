@@ -2,52 +2,22 @@
 @import "tailwindcss";
 
 @theme {
+  /* Premium Studio Typography */
   --font-sans: 'Inter', sans-serif;
   --font-heading: 'Plus Jakarta Sans', sans-serif;
 
-  --color-background: hsl(240 50% 3%);
-  --color-foreground: hsl(240 100% 97%);
-  --color-primary: hsl(275 60% 46%);
-  --color-accent: hsl(292 96% 61%);
-  --color-secondary: hsl(275 30% 15%);
-  --color-card: hsl(240 30% 6%);
-  --color-muted-foreground: hsl(240 30% 60%);
-  
-  /* Aurora Keyframe Bindings */
-  --animate-aurora-1: aurora-drift-1 22s infinite alternate ease-in-out;
-  --animate-aurora-2: aurora-drift-2 28s infinite alternate ease-in-out;
-  --animate-aurora-3: aurora-drift-3 18s infinite alternate ease-in-out;
+  /* Architectural High-Key Minimalist Palette */
+  --color-background: hsl(0 0% 100%);
+  --color-foreground: hsl(240 10% 3.9%);
+  --color-primary: hsl(240 5.9% 10%);
+  --color-accent: hsl(240 5.9% 10%);
+  --color-secondary: hsl(240 4.8% 95.9%);
+  --color-card: hsl(0 0% 100%);
+  --color-muted-foreground: hsl(240 3.8% 46.1%);
+  --color-border: hsl(240 5.9% 90%);
 }
 
-/* Custom Native GPU-Accelerated Orbs */
-.aurora-orb-1 { 
-  background: radial-gradient(circle, hsl(275 60% 46% / 0.18) 0%, transparent 70%); 
-}
-.aurora-orb-2 { 
-  background: radial-gradient(circle, hsl(292 96% 61% / 0.12) 0%, transparent 70%); 
-}
-.aurora-orb-3 { 
-  background: radial-gradient(circle, hsl(260 60% 50% / 0.10) 0%, transparent 70%); 
-}
-
-@keyframes aurora-drift-1 {
-  0% { transform: translate(0px, 0px) scale(1); }
-  50% { transform: translate(100px, 80px) scale(1.2); }
-  100% { transform: translate(-50px, 40px) scale(0.9); }
-}
-
-@keyframes aurora-drift-2 {
-  0% { transform: translate(0px, 0px) scale(1.1); }
-  50% { transform: translate(-120px, -60px) scale(0.85); }
-  100% { transform: translate(80px, 50px) scale(1.15); }
-}
-
-@keyframes aurora-drift-3 {
-  0% { transform: translate(0px, 0px) scale(0.95); }
-  50% { transform: translate(60px, -100px) scale(1.1); }
-  100% { transform: translate(-40px, -40px) scale(1); }
-}
-
+/* Base Optimization Layer */
 html, body {
   background-color: var(--color-background);
   color: var(--color-foreground);
@@ -55,8 +25,19 @@ html, body {
   overflow-x: hidden;
   margin: 0;
   padding: 0;
+  
+  /* Subpixel anti-aliasing for razor-sharp typography rendering */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
+  letter-spacing: -0.03em;
+}
+
+/* Native selection polish */
+::selection {
+  background-color: hsl(240 5.9% 10%);
+  color: hsl(0 0% 100%);
 }

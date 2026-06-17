@@ -1,17 +1,82 @@
 import { useState, useEffect } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { Phone, PhoneOff, Wifi, Battery, ShieldAlert } from 'lucide-react';
-import { audio } from '../utils/audioEngine';
+import { Wifi, Battery } from 'lucide-react';
 
+// ==========================================
+// INLINED DEPENDENCIES (To guarantee no compile errors)
+// ==========================================
+const audio = {
+  playClick: () => {
+    // Optional placeholder if audio engine isn't ready
+  }
+};
+
+const BerryLogo = () => (
+  <svg width="38" height="44" viewBox="0 0 44 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="berry-left" cx="35%" cy="30%" r="70%">
+        <stop offset="0%" stopColor="#52525b" />
+        <stop offset="70%" stopColor="#18181b" />
+        <stop offset="100%" stopColor="#09090b" />
+      </radialGradient>
+      <radialGradient id="berry-right" cx="35%" cy="30%" r="70%">
+        <stop offset="0%" stopColor="#3f3f46" />
+        <stop offset="75%" stopColor="#09090b" />
+        <stop offset="100%" stopColor="#000000" />
+      </radialGradient>
+      <radialGradient id="berry-top" cx="35%" cy="30%" r="70%">
+        <stop offset="0%" stopColor="#71717a" />
+        <stop offset="70%" stopColor="#27272a" />
+        <stop offset="100%" stopColor="#18181b" />
+      </radialGradient>
+      <linearGradient id="leaf-grad-1" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#3f3f46" />
+        <stop offset="100%" stopColor="#18181b" />
+      </linearGradient>
+      <linearGradient id="leaf-grad-2" x1="100%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stopColor="#52525b" />
+        <stop offset="100%" stopColor="#09090b" />
+      </linearGradient>
+    </defs>
+    <path d="M22 14C22 8 26 4 32 3" stroke="#27272a" strokeWidth="3" strokeLinecap="round" />
+    <path d="M22 14C14 10 6 13 4 18C4 24 14 22 22 14Z" fill="url(#leaf-grad-1)" />
+    <path d="M22 14C28 8 36 9 39 14C41 20 31 20 22 14Z" fill="url(#leaf-grad-2)" />
+    <circle cx="15" cy="37" r="11" fill="url(#berry-left)" />
+    <circle cx="15" cy="37" r="11" fill="black" fillOpacity="0.2" />
+    <ellipse cx="12.5" cy="32.5" rx="3" ry="1.5" transform="rotate(-30 12.5 32.5)" fill="white" fillOpacity="0.3" />
+    <circle cx="10" cy="35" r="0.75" fill="white" fillOpacity="0.5" />
+    <circle cx="29" cy="37" r="11" fill="url(#berry-right)" />
+    <circle cx="29" cy="37" r="11" fill="black" fillOpacity="0.2" />
+    <ellipse cx="26.5" cy="32.5" rx="3" ry="1.5" transform="rotate(-30 26.5 32.5)" fill="white" fillOpacity="0.3" />
+    <circle cx="24" cy="35" r="0.75" fill="white" fillOpacity="0.5" />
+    <circle cx="22" cy="25" r="12" fill="url(#berry-top)" />
+    <ellipse cx="19.5" cy="20.5" rx="3.5" ry="1.8" transform="rotate(-30 19.5 20.5)" fill="white" fillOpacity="0.4" />
+    <circle cx="16.5" cy="23" r="0.8" fill="white" fillOpacity="0.6" />
+  </svg>
+);
+
+
+// ==========================================
+// MAIN COMPONENT
+// ==========================================
 export default function PhoneModel() {
-  const [isHovered, setIsHovered] = useState(false);
+  const [isFlipped, setIsFlipped] = useState(false);
   const [signalStrength, setSignalStrength] = useState(4);
 
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [12, -12]), { stiffness: 150, damping: 20 });
-  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-12, 12]), { stiffness: 150, damping: 20 });
+  // Parallax constraints
+  const baseRotateX = useTransform(mouseY, [-0.5, 0.5], [15, -15]);
+  const baseRotateY = useTransform(mouseX, [-0.5, 0.5], [-20, 20]);
+
+  // Flip logic: Add 180 degrees smoothly when hovered
+  const targetRotateY = useTransform(
+    () => baseRotateY.get() + (isFlipped ? 180 : 0)
+  );
+
+  const rotateX = useSpring(baseRotateX, { stiffness: 150, damping: 20 });
+  const rotateY = useSpring(targetRotateY, { stiffness: 100, damping: 25 });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -22,136 +87,206 @@ export default function PhoneModel() {
   const handleMouseLeave = () => {
     mouseX.set(0);
     mouseY.set(0);
-    setIsHovered(false);
+    setIsFlipped(false);
+  };
+
+  const handleMouseEnter = () => {
+    setIsFlipped(true);
+    audio.playClick();
   };
 
   useEffect(() => {
-    if (!isHovered) return;
+    if (isFlipped) return;
     const signalTicker = setInterval(() => {
       setSignalStrength(() => Math.floor(Math.random() * 2) + 3);
     }, 800);
     return () => clearInterval(signalTicker);
-  }, [isHovered]);
+  }, [isFlipped]);
 
   return (
-    <div className="relative flex h-[540px] w-full items-center justify-center overflow-visible select-none py-6">
+    <div className="relative flex h-[540px] w-full items-center justify-center select-none py-6">
+      
+      {/* Floor Shadow */}
+      <div className="absolute -bottom-8 h-12 w-64 rounded-[100%] bg-orange-900/15 blur-2xl pointer-events-none mix-blend-multiply" />
+
+      {/* Perspective Container */}
       <div
-        className="relative h-[440px] w-[220px] cursor-pointer [perspective:1200px]"
+        className="relative h-[440px] w-[220px] cursor-pointer"
+        style={{ perspective: '1200px' }}
         onMouseMove={handleMouseMove}
-        onMouseEnter={() => { setIsHovered(true); audio.playClick(); }}
+        onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
+        {/* 3D Rotating Wrapper */}
         <motion.div
           style={{ rotateX, rotateY, transformStyle: 'preserve-3d' }}
-          className="relative h-full w-full flex flex-col items-center justify-center"
+          className="relative h-full w-full transition-shadow duration-500 hover:shadow-2xl rounded-[40px]"
         >
-          {/* Hardware Obsidian Frame */}
-          <div className="absolute inset-0 rounded-[40px] bg-gradient-to-b from-zinc-800 via-zinc-900 to-black border-[4px] border-zinc-700/70 shadow-[0_30px_70px_rgba(0,0,0,0.85)] p-2 flex items-center justify-center">
-            
-            {/* Volume Buttons & Power Keys */}
-            <div className="absolute left-[-6px] top-24 h-10 w-[3px] rounded-l-xs bg-zinc-800" />
-            <div className="absolute left-[-6px] top-36 h-10 w-[3px] rounded-l-xs bg-zinc-800" />
-            <div className="absolute right-[-6px] top-28 h-14 w-[3px] rounded-r-xs bg-zinc-800" />
+          
+          {/* ========================================================= */}
+          {/* 1. CHASSIS (The edge/thickness of the phone) */}
+          {/* ========================================================= */}
+          <div
+            className="absolute inset-0 rounded-[40px] border-[4px] shadow-[0_30px_70px_rgba(120,50,10,0.25)]"
+            style={{
+              // Refined chassis gradient to match the smoother Cosmic Orange
+              background: 'linear-gradient(155deg, #ed8239 0%, #cf631b 18%, #ad4c10 38%, #8f3b07 52%, #ba5513 68%, #d1661c 84%, #e87e35 100%)',
+              borderColor: '#b55a22',
+              transform: 'translateZ(0px)', // Neutral center
+            }}
+          >
+            {/* Brushed metal grain texture overlay */}
+            <div
+              className="absolute inset-0 rounded-[36px] opacity-40 pointer-events-none mix-blend-overlay"
+              style={{
+                backgroundImage: 'repeating-linear-gradient(95deg, rgba(255,255,255,0.08) 0px, rgba(255,255,255,0.08) 1px, transparent 1px, transparent 3px)',
+              }}
+            />
+            {/* Chamfer highlight edge — simulates polished bevel catching light */}
+            <div className="absolute inset-0 rounded-[40px] pointer-events-none" style={{ boxShadow: 'inset 0 1px 1px rgba(255,220,190,0.5), inset 0 -2px 4px rgba(60,20,0,0.35)' }} />
 
-            {/* AMOLED Screen Panel */}
-            <div className="h-full w-full rounded-[32px] bg-black border border-black overflow-hidden relative p-3 flex flex-col justify-between">
+            {/* Physical Titanium Buttons */}
+            <div className="absolute left-[-6px] top-[78px] h-7 w-[3px] rounded-l-xs shadow-inner" style={{ background: 'linear-gradient(90deg, #8f3b07, #d1661c)' }} />
+            <div className="absolute left-[-6px] top-28 h-10 w-[3px] rounded-l-xs shadow-inner" style={{ background: 'linear-gradient(90deg, #8f3b07, #d1661c)' }} />
+            <div className="absolute left-[-6px] top-[154px] h-10 w-[3px] rounded-l-xs shadow-inner" style={{ background: 'linear-gradient(90deg, #8f3b07, #d1661c)' }} />
+            <div className="absolute right-[-6px] top-28 h-16 w-[3px] rounded-r-xs shadow-inner" style={{ background: 'linear-gradient(90deg, #d1661c, #8f3b07)' }} />
+          </div>
+
+
+          {/* ========================================================= */}
+          {/* 2. FRONT FACE (The Screen) */}
+          {/* ========================================================= */}
+          <div
+            className="absolute inset-[2px] rounded-[34px] bg-black border-[3px] border-black overflow-hidden flex flex-col justify-between p-3"
+            style={{
+              transform: 'translateZ(1px)', // Pushed slightly to the front
+              backfaceVisibility: 'hidden',
+              WebkitBackfaceVisibility: 'hidden',
+            }}
+          >
+            {/* Wallpaper */}
+            <div className="absolute inset-0 z-0 bg-neutral-950">
+              <div
+                className="w-full h-full select-none pointer-events-none"
+                style={{ background: 'radial-gradient(circle at 30% 20%, #ff8a3d 0%, #d4541a 30%, #5c2410 60%, #0a0604 100%)' }}
+              />
+              <div className="absolute top-1/4 left-1/3 h-24 w-24 rounded-full bg-orange-400/30 blur-2xl" />
+              <div className="absolute bottom-1/4 right-1/4 h-20 w-20 rounded-full bg-amber-600/20 blur-2xl" />
+              <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/85 pointer-events-none" />
+            </div>
+
+            {/* Dynamic Island */}
+            <div className="absolute top-2.5 left-1/2 -translate-x-1/2 h-[18px] w-[68px] bg-black rounded-full z-30 flex items-center justify-center shadow-[0_2px_10px_rgba(0,0,0,0.5)] border border-zinc-900">
+              <div className="h-2 w-2 rounded-full bg-[#111] ml-auto mr-2 border border-white/5" />
+            </div>
+
+            {/* Lock Screen UI */}
+            <div className="h-full w-full flex flex-col justify-between pt-4 font-mono text-[8px] relative z-10">
+              <div className="flex justify-between items-center text-white/90 px-1 drop-shadow-md font-bold">
+                <span>BERRY OS</span>
+                <div className="flex items-center gap-1">
+                  <Wifi size={8} />
+                  <Battery size={8} />
+                </div>
+              </div>
+
+              <div className="text-center w-full mt-3 px-2 space-y-0.5 drop-shadow-lg">
+                <div className="text-[7px] font-bold tracking-widest text-white/80 uppercase">Tuesday, June 16</div>
+                <div className="text-4xl font-black tracking-tight text-white leading-none">10:09</div>
+                <div className="text-[6px] font-black tracking-widest text-zinc-300 uppercase mt-1">Hover to Inspect Chassis</div>
+              </div>
+
+              <div className="flex-1" />
+            </div>
+          </div>
+
+
+          {/* ========================================================= */}
+          {/* 3. BACK FACE (Camera & Logo) */}
+          {/* ========================================================= */}
+          <div
+            className="absolute inset-[2px] rounded-[34px] shadow-inner"
+            style={{
+              transform: 'rotateY(180deg) translateZ(1px)', // Flipped 180deg and pushed slightly to the back
+              backfaceVisibility: 'hidden',
+              WebkitBackfaceVisibility: 'hidden',
+              // Refined back glass color to match the vibrant solid orange in the reference
+              background: 'linear-gradient(160deg, #ed8239 0%, #db6e22 40%, #c45c15 100%)',
+            }}
+          >
+            {/* 3A. Isolated Background Textures */}
+            <div className="absolute inset-0 rounded-[34px] overflow-hidden pointer-events-none">
+              <div
+                className="absolute inset-0 opacity-[0.10] mix-blend-overlay"
+                style={{
+                  backgroundImage: 'repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,0.4) 0px, transparent 1px, transparent 2px)',
+                  backgroundSize: '3px 3px',
+                }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-transparent to-amber-950/20" />
+              <div className="absolute -inset-10 bg-gradient-to-br from-white/20 via-transparent to-transparent rotate-12" />
+            </div>
+
+            {/* 3B. The Hardware Features (Safely layered on top using standard z-index) */}
+            <div className="absolute inset-0 z-10 pointer-events-none">
               
-              {/* LIVE EXTERNAL WALLPAPER LINK NODE */}
-              <div className="absolute inset-0 z-0 bg-neutral-950">
-                <img 
-                  src="https://bzimg.ipl.com/uploads/thumbnail/virat-kohli-hd-phone-wallpaper-4659317733660632t1kvlw03h.jpg" 
-                  alt="King Kohli Wallpaper" 
-                  className="w-full h-full object-cover select-none pointer-events-none transition-all duration-500"
-                  style={{ 
-                    filter: isHovered ? 'brightness(0.7) contrast(1.05)' : 'brightness(0.45)',
-                    transform: isHovered ? 'scale(1.05)' : 'scale(1)'
-                  }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/70 pointer-events-none" />
+              {/* ✨ WIDE HORIZONTAL CAMERA PLATEAU (iPhone 17 Pro Style) */}
+              <div
+                className="absolute top-[14px] left-[12px] right-[12px] h-[96px] rounded-[28px] shadow-[0_8px_20px_rgba(150,50,0,0.3),inset_0_1.5px_3px_rgba(255,255,255,0.45),inset_0_-1px_2px_rgba(0,0,0,0.1)] pointer-events-auto overflow-hidden"
+                style={{ background: 'linear-gradient(145deg, #f7904b 0%, #e37426 50%, #cd6015 100%)' }}
+              >
+                {/* Plateau texture sheen to make it look like raised frosted glass */}
+                <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-black/5 mix-blend-overlay pointer-events-none" />
+
+                {/* Lens 1: Top Left */}
+                <div className="absolute top-[8px] left-[12px] h-[38px] w-[38px] rounded-full bg-zinc-950 border-[2px] border-zinc-700/60 shadow-[inset_0_3px_10px_rgba(0,0,0,1),0_2px_5px_rgba(0,0,0,0.25)] flex items-center justify-center">
+                  <div className="h-[16px] w-[16px] rounded-full bg-[#050505] shadow-[inset_0_1px_4px_rgba(255,255,255,0.2)] flex items-center justify-center">
+                    <div className="h-2 w-2 rounded-full bg-blue-800/40 blur-[0.5px]" />
+                  </div>
+                </div>
+
+                {/* Lens 2: Bottom Left */}
+                <div className="absolute bottom-[8px] left-[12px] h-[38px] w-[38px] rounded-full bg-zinc-950 border-[2px] border-zinc-700/60 shadow-[inset_0_3px_10px_rgba(0,0,0,1),0_2px_5px_rgba(0,0,0,0.25)] flex items-center justify-center">
+                  <div className="h-[16px] w-[16px] rounded-full bg-[#050505] shadow-[inset_0_1px_4px_rgba(255,255,255,0.2)] flex items-center justify-center">
+                    <div className="h-2 w-2 rounded-full bg-purple-800/40 blur-[0.5px]" />
+                  </div>
+                </div>
+
+                {/* Lens 3: Center (Nestled between the top and bottom lenses) */}
+                <div className="absolute top-1/2 -translate-y-1/2 left-[54px] h-[38px] w-[38px] rounded-full bg-zinc-950 border-[2px] border-zinc-700/60 shadow-[inset_0_3px_10px_rgba(0,0,0,1),0_2px_5px_rgba(0,0,0,0.25)] flex items-center justify-center">
+                  <div className="h-[16px] w-[16px] rounded-full bg-[#050505] shadow-[inset_0_1px_4px_rgba(255,255,255,0.2)] flex items-center justify-center">
+                    <div className="h-1.5 w-1.5 rounded-sm bg-zinc-800 border border-zinc-900/80" />
+                  </div>
+                </div>
+
+                {/* Flash (Top Right) */}
+                <div className="absolute top-[16px] right-[20px] h-[18px] w-[18px] rounded-full bg-zinc-100/95 border border-zinc-300/50 shadow-[inset_0_1px_3px_rgba(0,0,0,0.2),0_1px_2px_rgba(0,0,0,0.1)] flex items-center justify-center overflow-hidden">
+                   <div className="w-full h-1/2 bg-yellow-100/90 absolute top-0" />
+                   <div className="w-full h-1/2 bg-amber-200/90 absolute bottom-0" />
+                </div>
+
+                {/* LiDAR Scanner (Bottom Right) */}
+                <div className="absolute bottom-[16px] right-[20px] h-[18px] w-[18px] rounded-full bg-zinc-900 border border-zinc-700/80 shadow-inner flex items-center justify-center">
+                  <div className="h-[7px] w-[7px] rounded-full bg-[#0a0a0a]" />
+                </div>
+
+                {/* Microphone pinhole */}
+                <div className="absolute top-1/2 -translate-y-1/2 right-[44px] h-[5px] w-[5px] rounded-full bg-zinc-950/90 shadow-inner border border-white/10" />
               </div>
 
-              {/* Dynamic Island Capsule Node */}
-              <div className="absolute top-2.5 left-1/2 -translate-x-1/2 h-4 w-16 bg-black rounded-full z-30 border border-white/5 flex items-center justify-center">
-                <div className="h-1.5 w-1.5 rounded-full bg-zinc-900 ml-auto mr-1.5 border border-indigo-500/20" />
+              {/* Logo - Adjusted to mimic the embedded, etched Apple logo look */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-125 opacity-[0.25] mix-blend-multiply">
+                <BerryLogo />
               </div>
 
-              {/* ==================== SCREEN MODE 1: STANDBY CLOCK ==================== */}
-              {!isHovered && (
-                <motion.div 
-                  initial={{ opacity: 0 }} 
-                  animate={{ opacity: 1 }}
-                  className="h-full w-full flex flex-col justify-between pt-4 font-mono text-[8px] relative z-10 animate-in fade-in duration-200"
-                >
-                  {/* Top Status Bar Row */}
-                  <div className="flex justify-between items-center text-white/80 px-1 drop-shadow-[0_1px_4px_rgba(0,0,0,0.6)] font-bold">
-                    <span>BERRY OS</span>
-                    <div className="flex items-center gap-1">
-                      <Wifi size={8} />
-                      <Battery size={8} />
-                    </div>
-                  </div>
-
-                  {/* ✨ FIXED: Time and Date display pushed cleanly to the top third block, clear of the central portrait */}
-                  <div className="text-center w-full mt-3 px-2 space-y-0.5 drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)]">
-                    <div className="text-[7px] font-bold tracking-widest text-white/70 uppercase">Tuesday, June 16</div>
-                    <div className="text-4xl font-black tracking-tight text-white leading-none">10:09</div>
-                    <div className="text-[6px] font-black tracking-widest text-cyan-400 uppercase mt-1">System Linked</div>
-                  </div>
-
-                  {/* Flexible Layout Spacer */}
-                  <div className="flex-1" />
-
-                  {/* Bottom Operational Action Prompt */}
-                  <div className="rounded-2xl bg-black/50 border border-white/10 p-2 text-center text-white/90 text-[7px] tracking-widest uppercase font-bold backdrop-blur-xs shadow-md">
-                    Hover to Awaken Node
-                  </div>
-                </motion.div>
-              )}
-
-              {/* ==================== SCREEN MODE 2: ACTIVE RE-ACTIVE TELEMETRY ==================== */}
-              {isHovered && (
-                <motion.div 
-                  initial={{ opacity: 0, scale: 0.96 }} 
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="h-full w-full flex flex-col justify-between pt-4 font-mono text-[8px] relative z-10"
-                >
-                  <div className="flex justify-between items-center text-cyan-400 px-1 font-black drop-shadow-md">
-                    <span className="animate-pulse flex items-center gap-1">
-                      <Wifi size={8} /> NET_{signalStrength}G
-                    </span>
-                    <span className="text-white">98%</span>
-                  </div>
-
-                  {/* Incoming Call Simulated Component Panel */}
-                  <div className="text-center my-auto space-y-3.5 animate-in fade-in slide-in-from-bottom-2 duration-300">
-                    <div className="relative mx-auto h-11 w-11 rounded-full border border-cyan-400/30 bg-black/60 flex items-center justify-center text-cyan-400 backdrop-blur-xs">
-                      <ShieldAlert size={18} className="animate-pulse" />
-                      <span className="absolute inset-0 rounded-full border border-cyan-400/40 animate-ping opacity-20" />
-                    </div>
-                    
-                    <div className="bg-black/60 p-2 rounded-xl border border-white/10 backdrop-blur-xs max-w-[160px] mx-auto shadow-xl">
-                      <h3 className="text-[9px] font-black text-white tracking-wider uppercase">Neural Core Alpha</h3>
-                      <p className="text-[6px] text-cyan-400 mt-0.5 tracking-widest uppercase font-bold">Secure Connection Vector</p>
-                    </div>
-
-                    <div className="flex justify-center gap-5 pt-1">
-                      <div className="h-8 w-8 rounded-full bg-red-500/90 border border-red-600 flex items-center justify-center text-white shadow-lg transform hover:scale-105 transition-transform">
-                        <PhoneOff size={11} />
-                      </div>
-                      <div className="h-8 w-8 rounded-full bg-emerald-500/90 border border-emerald-600 flex items-center justify-center text-white shadow-lg animate-bounce transform hover:scale-105 transition-transform">
-                        <Phone size={11} />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="border-t border-white/10 bg-black/60 py-1 rounded-t-xl text-[7px] text-center text-cyan-400 font-black tracking-widest uppercase backdrop-blur-xs">
-                    Quantum Stream Active
-                  </div>
-                </motion.div>
-              )}
+              {/* Regulatory Markings */}
+              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-full text-[5px] font-mono font-bold text-orange-950/50 tracking-widest uppercase text-center opacity-70">
+                Berry Inc. Assembled in the Lab.<br/>Model B17-PRO · Cosmic Orange
+              </div>
 
             </div>
           </div>
+
         </motion.div>
       </div>
     </div>

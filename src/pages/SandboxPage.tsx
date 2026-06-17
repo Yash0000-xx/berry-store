@@ -130,11 +130,13 @@ export default function SandboxPage() {
       animationRef.current = requestAnimationFrame(renderFrame);
       analyser.getByteTimeDomainData(dataArray);
 
-      ctx.fillStyle = 'rgba(10, 5, 20, 0.2)';
+      // ✨ UPDATED: High-Key clinical background for the oscilloscope
+      ctx.fillStyle = '#fafafa';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       ctx.lineWidth = 2.5;
-      ctx.strokeStyle = waveType === 'square' ? '#f97316' : waveType === 'triangle' ? '#06b6d4' : '#c084fc';
+      // ✨ UPDATED: Dark, crisp stroke colors for the waveforms
+      ctx.strokeStyle = waveType === 'square' ? '#18181b' : waveType === 'triangle' ? '#52525b' : '#09090b';
       ctx.beginPath();
 
       const sliceWidth = canvas.width / bufferLength;
@@ -184,11 +186,9 @@ export default function SandboxPage() {
       buildBuffer += targetLine[currentCharIdx];
       setAiTextOutput(buildBuffer);
 
-      // Simulate live random token generation velocity bursts
       const burstSpeed = Math.floor(Math.random() * 45) + 25;
       setTokenVelocity(burstSpeed);
       
-      // Feed values directly into our historical token graph array buffer
       tokenHistoryRef.current.push(burstSpeed);
       tokenHistoryRef.current.shift();
       drawTokenOscilloscope();
@@ -208,7 +208,8 @@ export default function SandboxPage() {
     if (!ctx) return;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.strokeStyle = '#e040fb';
+    // ✨ UPDATED: Dark stroke for clinical token graph
+    ctx.strokeStyle = '#18181b';
     ctx.lineWidth = 1.5;
     ctx.beginPath();
 
@@ -216,7 +217,6 @@ export default function SandboxPage() {
     
     tokenHistoryRef.current.forEach((val, index) => {
       const x = index * sliceWidth;
-      // Map token generation counts directly onto the Y height plane
       const y = canvas.height - (val / 80) * canvas.height;
       if (index === 0) ctx.moveTo(x, y);
       else ctx.lineTo(x, y);
@@ -226,29 +226,30 @@ export default function SandboxPage() {
   };
 
   return (
-    <div className="min-h-screen w-full flex flex-col items-center justify-center text-white px-4 pt-32 pb-24 relative z-10 space-y-12">
+    // ✨ HIGH-KEY MINIMALIST WRAPPER
+    <div className="min-h-screen w-full flex flex-col items-center justify-center bg-white text-zinc-900 px-4 pt-32 pb-24 relative z-10 space-y-12 transition-colors duration-700">
       
       {/* ==================== MODULE 1: AUDIO SYNTHESIZER ==================== */}
-      <div className="w-full max-w-3xl rounded-[32px] border border-white/5 bg-card/60 p-6 shadow-2xl backdrop-blur-2xl grid grid-cols-1 md:grid-cols-5 gap-6">
+      <div className="w-full max-w-3xl rounded-[32px] border border-zinc-200 bg-white p-6 shadow-sm grid grid-cols-1 md:grid-cols-5 gap-6">
         <div className="md:col-span-2 flex flex-col justify-between space-y-6">
           <div>
             <div className="flex items-center gap-2.5">
-              <div className="rounded-xl bg-white/5 p-2 text-accent border border-white/5"><Music size={16} /></div>
+              <div className="rounded-xl bg-zinc-100 p-2 text-zinc-900 border border-zinc-200"><Music size={16} /></div>
               <div>
-                <h2 className="font-heading text-lg font-black tracking-tight">Audio Synth Lab</h2>
-                <p className="text-[10px] text-muted-foreground mt-0.5">Program raw signal modulation live grids.</p>
+                <h2 className="font-heading text-lg font-black tracking-tight text-zinc-900">Audio Synth Lab</h2>
+                <p className="text-[10px] text-zinc-500 font-medium mt-0.5">Program raw signal modulation live grids.</p>
               </div>
             </div>
 
             <div className="mt-6">
-              <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground block mb-2">1. Oscillator Waveform</span>
+              <span className="text-[9px] font-bold uppercase tracking-widest text-zinc-400 block mb-2">1. Oscillator Waveform</span>
               <div className="grid grid-cols-2 gap-1.5">
                 {(['sine', 'square', 'triangle', 'sawtooth'] as WaveType[]).map((type) => (
                   <button
                     key={type}
                     onClick={() => setWaveType(type)}
                     className={`rounded-xl border px-3 py-2 text-left text-[10px] font-black uppercase tracking-wide transition-all cursor-pointer ${
-                      waveType === type ? 'border-primary bg-primary/10 text-white shadow-md' : 'border-white/5 bg-white/2 text-muted-foreground'
+                      waveType === type ? 'border-zinc-900 bg-zinc-900 text-white shadow-sm' : 'border-zinc-200 bg-zinc-50 text-zinc-500 hover:text-zinc-900 hover:border-zinc-300'
                     }`}
                   >
                     {type}
@@ -258,92 +259,95 @@ export default function SandboxPage() {
             </div>
 
             <div className="mt-6">
-              <div className="flex justify-between text-[9px] font-bold uppercase tracking-widest text-muted-foreground mb-2">
+              <div className="flex justify-between text-[9px] font-bold uppercase tracking-widest text-zinc-400 mb-2">
                 <span>2. Core Frequency</span>
-                <span className="text-accent font-mono">{frequency} Hz</span>
+                <span className="text-zinc-900 font-mono">{frequency} Hz</span>
               </div>
-              <input type="range" min="110" max="880" value={frequency} onChange={(e) => setFrequency(Number(e.target.value))} className="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-accent" />
+              <input type="range" min="110" max="880" value={frequency} onChange={(e) => setFrequency(Number(e.target.value))} className="w-full h-1 bg-zinc-200 rounded-lg appearance-none cursor-pointer accent-zinc-900" />
             </div>
 
             <div className="mt-6">
-              <div className="flex justify-between text-[9px] font-bold uppercase tracking-widest text-muted-foreground mb-2">
+              <div className="flex justify-between text-[9px] font-bold uppercase tracking-widest text-zinc-400 mb-2">
                 <span>3. Detune Phasing</span>
-                <span className="text-accent font-mono">{detune} cents</span>
+                <span className="text-zinc-900 font-mono">{detune} cents</span>
               </div>
-              <input type="range" min="-100" max="100" value={detune} onChange={(e) => setDetune(Number(e.target.value))} className="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-accent" />
+              <input type="range" min="-100" max="100" value={detune} onChange={(e) => setDetune(Number(e.target.value))} className="w-full h-1 bg-zinc-200 rounded-lg appearance-none cursor-pointer accent-zinc-900" />
             </div>
           </div>
 
-          <div className="pt-4 border-t border-white/5">
+          <div className="pt-4 border-t border-zinc-100">
             {isPlaying ? (
-              <button onClick={stopSynthesizer} className="w-full flex items-center justify-center gap-2 rounded-xl bg-orange-500/10 border border-orange-500/30 text-orange-400 py-3 text-xs font-bold uppercase tracking-wider transition-all hover:bg-orange-500/20 shadow-md cursor-pointer"><Square size={12} fill="currentColor" /> Terminate Signal</button>
+              <button onClick={stopSynthesizer} className="w-full flex items-center justify-center gap-2 rounded-xl bg-zinc-100 border border-zinc-300 text-zinc-900 py-3 text-xs font-bold uppercase tracking-wider transition-all hover:bg-zinc-200 shadow-sm cursor-pointer"><Square size={12} fill="currentColor" /> Terminate Signal</button>
             ) : (
-              <button onClick={startSynthesizer} className="w-full flex items-center justify-center gap-2 rounded-xl bg-linear-to-r from-primary to-accent py-3 text-xs font-bold uppercase tracking-wider text-white shadow-xl transition-transform duration-200 hover:scale-102 cursor-pointer"><Play size={12} fill="currentColor" /> Initialize Synth Node</button>
+              <button onClick={startSynthesizer} className="w-full flex items-center justify-center gap-2 rounded-xl bg-zinc-900 py-3 text-xs font-bold uppercase tracking-wider text-white shadow-md transition-transform duration-200 hover:scale-102 cursor-pointer"><Play size={12} fill="currentColor" /> Initialize Synth Node</button>
             )}
           </div>
         </div>
-        <div className="md:col-span-3 rounded-2xl border border-white/5 bg-black/40 relative flex flex-col justify-between overflow-hidden min-h-[260px] p-4">
-          <div className="absolute top-4 left-4 z-10 flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-widest text-muted-foreground bg-card/60 rounded-full px-2.5 py-1 border border-white/5"><Activity size={10} className="text-accent" /><span>Oscilloscope Vector Grid</span></div>
-          <canvas ref={canvasRef} width="400" height="260" className="w-full h-full block absolute inset-0 bg-[#06030c]" />
-          {!isPlaying && <div className="relative z-10 m-auto text-center max-w-[180px] space-y-2 pointer-events-none opacity-40"><div className="text-2xl animate-pulse">📡</div><p className="text-[10px] text-muted-foreground leading-relaxed">Signal pipeline flatlined. Tap the launch key parameter node matrix to pipe waveforms.</p></div>}
+        
+        {/* LIGHT THEME OSCILLOSCOPE */}
+        <div className="md:col-span-3 rounded-2xl border border-zinc-200 bg-white shadow-inner relative flex flex-col justify-between overflow-hidden min-h-[260px] p-4">
+          <div className="absolute top-4 left-4 z-10 flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-widest text-zinc-500 bg-white/90 backdrop-blur-sm rounded-full px-2.5 py-1 border border-zinc-200 shadow-sm"><Activity size={10} className="text-zinc-900" /><span>Oscilloscope Vector Grid</span></div>
+          <canvas ref={canvasRef} width="400" height="260" className="w-full h-full block absolute inset-0 bg-[#fafafa]" />
+          {!isPlaying && <div className="relative z-10 m-auto text-center max-w-[180px] space-y-2 pointer-events-none opacity-40"><div className="text-2xl animate-pulse grayscale">📡</div><p className="text-[10px] text-zinc-600 font-medium leading-relaxed">Signal pipeline flatlined. Tap the launch key parameter node matrix to pipe waveforms.</p></div>}
         </div>
       </div>
 
       {/* ==================== MODULE 2: SPATIAL OPTICS LENS SIMULATOR ==================== */}
-      <div className="w-full max-w-3xl rounded-[32px] border border-white/5 bg-card/60 p-6 shadow-2xl backdrop-blur-2xl grid grid-cols-1 md:grid-cols-5 gap-6">
+      <div className="w-full max-w-3xl rounded-[32px] border border-zinc-200 bg-white p-6 shadow-sm grid grid-cols-1 md:grid-cols-5 gap-6">
         <div className="md:col-span-2 flex flex-col justify-between space-y-6">
           <div>
             <div className="flex items-center gap-2.5">
-              <div className="rounded-xl bg-white/5 p-2 text-cyan-400 border border-white/5"><Eye size={16} /></div>
+              <div className="rounded-xl bg-zinc-100 p-2 text-zinc-900 border border-zinc-200"><Eye size={16} /></div>
               <div>
-                <h2 className="font-heading text-lg font-black tracking-tight">Spatial Optics Matrix</h2>
-                <p className="text-[10px] text-muted-foreground mt-0.5">Calibrate eye tracking and focal plane metrics.</p>
+                <h2 className="font-heading text-lg font-black tracking-tight text-zinc-900">Spatial Optics Matrix</h2>
+                <p className="text-[10px] text-zinc-500 font-medium mt-0.5">Calibrate eye tracking and focal plane metrics.</p>
               </div>
             </div>
             <div className="mt-8">
-              <div className="flex justify-between text-[9px] font-bold uppercase tracking-widest text-muted-foreground mb-2"><span className="flex items-center gap-1"><Layers size={10} /> Pass-Through Opacity</span><span className="text-cyan-400 font-mono">{passThroughOpacity}%</span></div>
-              <input type="range" min="10" max="90" value={passThroughOpacity} onChange={(e) => setPassThroughOpacity(Number(e.target.value))} className="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-cyan-400" />
+              <div className="flex justify-between text-[9px] font-bold uppercase tracking-widest text-zinc-400 mb-2"><span className="flex items-center gap-1"><Layers size={10} /> Pass-Through Opacity</span><span className="text-zinc-900 font-mono">{passThroughOpacity}%</span></div>
+              <input type="range" min="10" max="90" value={passThroughOpacity} onChange={(e) => setPassThroughOpacity(Number(e.target.value))} className="w-full h-1 bg-zinc-200 rounded-lg appearance-none cursor-pointer accent-zinc-900" />
             </div>
             <div className="mt-6">
-              <div className="flex justify-between text-[9px] font-bold uppercase tracking-widest text-muted-foreground mb-2"><span className="flex items-center gap-1"><Eye size={10} /> Eye Foveation Focus Area</span><span className="text-cyan-400 font-mono">{eyeTrackingRadius}px</span></div>
-              <input type="range" min="15" max="60" value={eyeTrackingRadius} onChange={(e) => setEyeTrackingRadius(Number(e.target.value))} className="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-cyan-400" />
+              <div className="flex justify-between text-[9px] font-bold uppercase tracking-widest text-zinc-400 mb-2"><span className="flex items-center gap-1"><Eye size={10} /> Eye Foveation Focus Area</span><span className="text-zinc-900 font-mono">{eyeTrackingRadius}px</span></div>
+              <input type="range" min="15" max="60" value={eyeTrackingRadius} onChange={(e) => setEyeTrackingRadius(Number(e.target.value))} className="w-full h-1 bg-zinc-200 rounded-lg appearance-none cursor-pointer accent-zinc-900" />
             </div>
             <div className="mt-6">
-              <div className="flex justify-between text-[9px] font-bold uppercase tracking-widest text-muted-foreground mb-2"><span className="flex items-center gap-1"><Grid size={10} /> 3D Depth Field Skew</span><span className="text-cyan-400 font-mono">1:{gridDistortion}x</span></div>
-              <input type="range" min="2" max="25" value={gridDistortion} onChange={(e) => setGridDistortion(Number(e.target.value))} className="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-cyan-400" />
+              <div className="flex justify-between text-[9px] font-bold uppercase tracking-widest text-zinc-400 mb-2"><span className="flex items-center gap-1"><Grid size={10} /> 3D Depth Field Skew</span><span className="text-zinc-900 font-mono">1:{gridDistortion}x</span></div>
+              <input type="range" min="2" max="25" value={gridDistortion} onChange={(e) => setGridDistortion(Number(e.target.value))} className="w-full h-1 bg-zinc-200 rounded-lg appearance-none cursor-pointer accent-zinc-900" />
             </div>
           </div>
-          <div className="pt-4 border-t border-white/5 text-[9px] text-muted-foreground leading-relaxed">💡 <span className="text-white font-semibold">Simulation Mode Active:</span> Hover your mouse cursor inside the right-hand lens display viewfinder node to check the real-time foveated eye-tracking focus loop vector calculation.</div>
+          <div className="pt-4 border-t border-zinc-100 text-[9px] text-zinc-500 font-medium leading-relaxed">💡 <span className="text-zinc-900 font-bold">Simulation Mode Active:</span> Hover your mouse cursor inside the right-hand lens display viewfinder node to check the real-time foveated eye-tracking focus loop vector calculation.</div>
         </div>
-        <div ref={viewFrameRef} onMouseMove={handleMouseMoveViewport} className="md:col-span-3 rounded-2xl border border-white/5 bg-black/60 relative overflow-hidden min-h-[260px] cursor-crosshair flex items-center justify-center [perspective:800px]">
-          <div className="absolute inset-0 bg-gradient-to-tr from-purple-900/40 via-cyan-900/20 to-black transition-opacity duration-300" style={{ opacity: passThroughOpacity / 100 }} />
-          <div className="absolute inset-[-50%] grid grid-cols-12 grid-rows-12 gap-0 pointer-events-none opacity-20 border border-white/5 [transform-style:preserve-3d]" style={{ transform: `rotateX(40deg) translateZ(-50px) scale(${1 + gridDistortion / 50})` }}>
-            {[...Array(144)].map((_, idx) => <div key={idx} className="border-[0.5px] border-white/40 aspect-square" />)}
+        
+        {/* LIGHT THEME OPTICS LENS */}
+        <div ref={viewFrameRef} onMouseMove={handleMouseMoveViewport} className="md:col-span-3 rounded-2xl border border-zinc-200 bg-white relative overflow-hidden min-h-[260px] cursor-crosshair flex items-center justify-center [perspective:800px] shadow-inner">
+          <div className="absolute inset-0 bg-gradient-to-tr from-zinc-200 via-white to-zinc-50 transition-opacity duration-300" style={{ opacity: passThroughOpacity / 100 }} />
+          <div className="absolute inset-[-50%] grid grid-cols-12 grid-rows-12 gap-0 pointer-events-none opacity-40 border border-zinc-300 [transform-style:preserve-3d]" style={{ transform: `rotateX(40deg) translateZ(-50px) scale(${1 + gridDistortion / 50})` }}>
+            {[...Array(144)].map((_, idx) => <div key={idx} className="border-[0.5px] border-zinc-300 aspect-square" />)}
           </div>
-          <motion.div className="absolute rounded-full border border-cyan-400 pointer-events-none shadow-[0_0_20px_rgba(34,211,238,0.4)] bg-cyan-400/5 mix-blend-screen flex items-center justify-center text-[7px] text-cyan-300/80 font-mono tracking-tighter" animate={{ left: mousePos.x - eyeTrackingRadius, top: mousePos.y - eyeTrackingRadius, width: eyeTrackingRadius * 2, height: eyeTrackingRadius * 2 }} transition={{ type: 'spring', damping: 25, stiffness: 220 }}><div className="h-1 w-1 bg-cyan-400 rounded-full" /><span className="absolute -top-4 font-bold uppercase tracking-widest text-[6px]">Target Lock</span></motion.div>
-          <div className="relative text-center pointer-events-none z-10 scale-90 opacity-70"><div className="text-xs font-heading font-black tracking-widest uppercase text-white/90">Viewfinder Lens Core</div><div className="text-[8px] font-mono mt-1 text-cyan-400 tracking-wider">Coordinates: {Math.round(mousePos.x)}px • {Math.round(mousePos.y)}px</div></div>
+          <motion.div className="absolute rounded-full border-2 border-zinc-900 pointer-events-none shadow-md bg-zinc-900/5 mix-blend-multiply flex items-center justify-center text-[7px] text-zinc-900 font-mono tracking-tighter" animate={{ left: mousePos.x - eyeTrackingRadius, top: mousePos.y - eyeTrackingRadius, width: eyeTrackingRadius * 2, height: eyeTrackingRadius * 2 }} transition={{ type: 'spring', damping: 25, stiffness: 220 }}><div className="h-1 w-1 bg-zinc-900 rounded-full" /><span className="absolute -top-4 font-bold uppercase tracking-widest text-[6px]">Target Lock</span></motion.div>
+          <div className="relative text-center pointer-events-none z-10 scale-90 opacity-80"><div className="text-xs font-heading font-black tracking-widest uppercase text-zinc-900">Viewfinder Lens Core</div><div className="text-[8px] font-mono mt-1 text-zinc-500 tracking-wider font-bold">Coordinates: {Math.round(mousePos.x)}px • {Math.round(mousePos.y)}px</div></div>
         </div>
       </div>
 
       {/* ==================== ✨ MODULE 3: FEATURE 03 GENERATIVE SPEC-SHEET RENDERER ==================== */}
-      <div className="w-full max-w-3xl rounded-[32px] border border-white/5 bg-card/60 p-6 shadow-2xl backdrop-blur-2xl grid grid-cols-1 md:grid-cols-5 gap-6">
+      <div className="w-full max-w-3xl rounded-[32px] border border-zinc-200 bg-white p-6 shadow-sm grid grid-cols-1 md:grid-cols-5 gap-6">
         
         {/* Left Interactive Parameter Controls (2 Columns) */}
         <div className="md:col-span-2 flex flex-col justify-between space-y-6">
           <div>
             <div className="flex items-center gap-2.5">
-              <div className="rounded-xl bg-white/5 p-2 text-purple-400 border border-white/5">
+              <div className="rounded-xl bg-zinc-100 p-2 text-zinc-900 border border-zinc-200">
                 <Cpu size={16} />
               </div>
               <div>
-                <h2 className="font-heading text-lg font-black tracking-tight">Generative Spec Analyzer</h2>
-                <p className="text-[10px] text-muted-foreground mt-0.5">Stream deep hardware architectural documents.</p>
+                <h2 className="font-heading text-lg font-black tracking-tight text-zinc-900">Generative Spec Analyzer</h2>
+                <p className="text-[10px] text-zinc-500 font-medium mt-0.5">Stream deep hardware architectural documents.</p>
               </div>
             </div>
 
-            {/* PRODUCT TARGET SELECTOR GRID NODE */}
             <div className="mt-8">
-              <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground block mb-2.5">1. Target Core Node</span>
+              <span className="text-[9px] font-bold uppercase tracking-widest text-zinc-400 block mb-2.5">1. Target Core Node</span>
               <div className="grid grid-cols-2 gap-2">
                 {[
                   { id: 'phone', label: 'Berry 17 Pro' },
@@ -354,7 +358,7 @@ export default function SandboxPage() {
                     disabled={isStreaming}
                     onClick={() => setSelectedTarget(node.id as any)}
                     className={`rounded-xl border px-3 py-2.5 text-left text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer disabled:opacity-40 ${
-                      selectedTarget === node.id ? 'border-purple-500 bg-purple-500/10 text-white' : 'border-white/5 bg-white/2 text-muted-foreground'
+                      selectedTarget === node.id ? 'border-zinc-900 bg-zinc-900 text-white shadow-sm' : 'border-zinc-200 bg-zinc-50 text-zinc-500 hover:text-zinc-900 hover:border-zinc-300'
                     }`}
                   >
                     {node.label}
@@ -363,15 +367,13 @@ export default function SandboxPage() {
               </div>
             </div>
 
-            {/* LIVE VELOCITY DATA STREAM METER INLINE READOUT */}
-            <div className="mt-6 rounded-2xl bg-black/40 border border-white/5 p-4 flex flex-col justify-between gap-3 min-h-[95px]">
-              <div className="flex items-center justify-between text-[9px] font-bold uppercase tracking-widest text-muted-foreground">
+            <div className="mt-6 rounded-2xl bg-[#fafafa] border border-zinc-200 p-4 flex flex-col justify-between gap-3 min-h-[95px] shadow-inner">
+              <div className="flex items-center justify-between text-[9px] font-bold uppercase tracking-widest text-zinc-500">
                 <span className="flex items-center gap-1"><Terminal size={10} /> Stream Velocity</span>
-                <span className="font-mono text-purple-400 animate-pulse">{tokenVelocity} t/s</span>
+                <span className="font-mono text-zinc-900 animate-pulse">{tokenVelocity} t/s</span>
               </div>
               
-              {/* Token Velocity Mini Canvas Graph Tracker Display */}
-              <div className="h-8 w-full bg-white/2 rounded-lg relative overflow-hidden border border-white/2 font-mono">
+              <div className="h-8 w-full bg-white rounded-lg relative overflow-hidden border border-zinc-200 font-mono">
                 <canvas ref={tokenCanvasRef} width="240" height="32" className="w-full h-full block absolute inset-0" />
               </div>
             </div>
@@ -380,25 +382,25 @@ export default function SandboxPage() {
           <button
             disabled={isStreaming}
             onClick={runAiSpecAnalysis}
-            className="w-full flex items-center justify-center gap-2 rounded-xl bg-linear-to-r from-primary to-accent py-3 text-xs font-bold uppercase tracking-wider text-white shadow-xl transition-all duration-300 hover:scale-102 disabled:opacity-40 disabled:pointer-events-none cursor-pointer"
+            className="w-full flex items-center justify-center gap-2 rounded-xl bg-zinc-900 py-3 text-xs font-bold uppercase tracking-wider text-white shadow-md transition-all duration-300 hover:scale-102 disabled:opacity-40 disabled:pointer-events-none cursor-pointer"
           >
             <Sparkles size={12} fill="currentColor" /> Generate Technical Brief
           </button>
         </div>
 
-        {/* Right Typewriter Document Console Output Terminal Screen (3 Columns) */}
-        <div className="md:col-span-3 rounded-2xl border border-white/5 bg-[#05020a] p-4 font-mono text-[10px] leading-relaxed text-white/90 relative flex flex-col justify-between overflow-hidden min-h-[280px]">
+        {/* LIGHT THEME TYPEWRITER DOCUMENT CONSOLE */}
+        <div className="md:col-span-3 rounded-2xl border border-zinc-200 bg-[#fafafa] p-6 font-mono text-[10px] leading-relaxed text-zinc-800 relative flex flex-col justify-between overflow-hidden min-h-[280px] shadow-inner">
           <div className="overflow-y-auto max-h-[260px] whitespace-pre-wrap pr-1 scrollbar-none select-text">
             {aiTextOutput}
             {isStreaming && (
               <motion.span
                 animate={{ opacity: [1, 0] }}
                 transition={{ repeat: Infinity, duration: 0.6 }}
-                className="inline-block h-3 w-1.5 bg-purple-400 align-middle ml-0.5 shadow-[0_0_8px_#e040fb]"
+                className="inline-block h-3 w-1.5 bg-zinc-900 align-middle ml-0.5 shadow-sm"
               />
             )}
             {!isStreaming && aiTextOutput === '' && (
-              <div className="h-full flex flex-col items-center justify-center text-center text-muted-foreground opacity-30 select-none py-16 gap-2">
+              <div className="h-full flex flex-col items-center justify-center text-center text-zinc-400 opacity-60 select-none py-16 gap-2">
                 <Terminal size={22} />
                 <p className="text-[9px] uppercase tracking-widest font-bold max-w-[170px]">Terminal Standby. Awaiting generative brief initiation request stream...</p>
               </div>

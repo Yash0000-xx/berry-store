@@ -48,37 +48,37 @@ export default function GeniusBarModal() {
     <AnimatePresence>
       {isGeniusOpen && (
         <>
-          {/* Ambient Sheet Overlay Shield */}
+          {/* ✨ HIGH-KEY MINIMALIST: Ambient Sheet Overlay Shield */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setGeniusOpen(false)}
-            className="fixed inset-0 z-50 bg-black/70 backdrop-blur-md"
+            className="fixed inset-0 z-50 bg-white/40 backdrop-blur-md"
           />
 
-          {/* Core Central Modal Window Frame */}
+          {/* ✨ HIGH-KEY MINIMALIST: Core Central Modal Window Frame */}
           <motion.div
             initial={{ opacity: 0, scale: 0.96, y: 15 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 15 }}
-            className="fixed inset-4 z-50 m-auto h-[85vh] max-h-[680px] w-full max-w-[850px] overflow-y-auto rounded-[32px] border border-white/5 bg-card/95 p-6 text-white shadow-2xl backdrop-blur-3xl flex flex-col justify-between"
+            className="fixed inset-4 z-50 m-auto h-[85vh] max-h-[680px] w-full max-w-[850px] overflow-y-auto rounded-[32px] border border-zinc-200 bg-white p-6 text-zinc-900 shadow-2xl flex flex-col justify-between"
           >
             <div>
               {/* Header Module Rows */}
-              <div className="flex items-center justify-between border-b border-white/5 pb-4">
+              <div className="flex items-center justify-between border-b border-zinc-100 pb-4">
                 <div className="flex items-center gap-2.5">
-                  <div className="rounded-xl bg-linear-to-r from-primary to-accent p-2 shadow-[0_0_15px_rgba(123,47,190,0.3)]">
+                  <div className="rounded-xl bg-zinc-900 p-2 shadow-sm">
                     <Calendar size={16} className="text-white" />
                   </div>
                   <div>
-                    <h2 className="font-heading text-lg font-black tracking-tight">Genius Bar Concierge</h2>
-                    <p className="text-[11px] text-muted-foreground mt-0.5">Secure an immersive expert configuration window session.</p>
+                    <h2 className="font-heading text-lg font-black tracking-tight text-zinc-900">Genius Bar Concierge</h2>
+                    <p className="text-[11px] text-zinc-500 font-medium mt-0.5">Secure an immersive expert configuration window session.</p>
                   </div>
                 </div>
                 <button 
                   onClick={() => setGeniusOpen(false)}
-                  className="rounded-full bg-white/5 p-2 transition-colors hover:bg-white/10 cursor-pointer"
+                  className="rounded-full bg-zinc-50 border border-zinc-200 p-2 transition-colors hover:bg-zinc-100 text-zinc-400 hover:text-zinc-900 cursor-pointer"
                 >
                   <X size={16} />
                 </button>
@@ -86,7 +86,7 @@ export default function GeniusBarModal() {
 
               {/* ==================== 14-DAY HORIZONTAL SLIDER ROW ==================== */}
               <div className="mt-6">
-                <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground block mb-2.5">1. Select Target Date Node</span>
+                <span className="text-[9px] font-bold uppercase tracking-widest text-zinc-400 block mb-2.5">1. Select Target Date Node</span>
                 <div className="flex gap-2 overflow-x-auto pb-3 scrollbar-none snap-x">
                   {calendarDays.map((day, idx) => (
                     <button
@@ -94,11 +94,11 @@ export default function GeniusBarModal() {
                       onClick={() => setSelectedDayIdx(idx)}
                       className={`min-w-[85px] flex-shrink-0 rounded-2xl border px-3 py-3.5 text-center transition-all snap-center cursor-pointer ${
                         selectedDayIdx === idx 
-                          ? 'border-accent bg-accent/10 shadow-[0_0_15px_rgba(224,64,251,0.15)] text-white' 
-                          : 'border-white/5 bg-white/2 text-muted-foreground hover:border-white/20'
+                          ? 'border-zinc-900 bg-zinc-900 shadow-md text-white' 
+                          : 'border-zinc-200 bg-zinc-50 text-zinc-500 hover:border-zinc-300 hover:text-zinc-900'
                       }`}
                     >
-                      <span className="text-[10px] font-bold uppercase tracking-wider block opacity-60">{day.dayLabel}</span>
+                      <span className="text-[10px] font-bold uppercase tracking-wider block opacity-80">{day.dayLabel}</span>
                       <span className="text-xs font-heading font-black block mt-1 tracking-tight">{day.dateLabel}</span>
                     </button>
                   ))}
@@ -106,9 +106,9 @@ export default function GeniusBarModal() {
               </div>
 
               {/* ==================== THE AVAILABLE TIME SLOTS GRID ==================== */}
-              <div className="mt-6 pt-6 border-t border-white/5">
-                <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground block mb-3.5 flex items-center gap-1.5">
-                  <Clock size={10} className="text-accent" />
+              <div className="mt-6 pt-6 border-t border-zinc-100">
+                <span className="text-[9px] font-bold uppercase tracking-widest text-zinc-400 block mb-3.5 flex items-center gap-1.5">
+                  <Clock size={10} className="text-zinc-900" />
                   2. Allocate Available Session Window ({calendarDays[selectedDayIdx].fullString})
                 </span>
                 
@@ -117,7 +117,7 @@ export default function GeniusBarModal() {
                     <button
                       key={slot}
                       onClick={() => handleSlotSelection(slot)}
-                      className="rounded-xl border border-white/5 bg-white/2 px-4 py-3 text-center text-xs font-semibold tracking-wide text-white/85 transition-all hover:bg-primary hover:border-accent/40 hover:text-white cursor-pointer hover:shadow-lg"
+                      className="rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-center text-xs font-bold tracking-wide text-zinc-600 transition-all hover:bg-zinc-900 hover:border-zinc-900 hover:text-white cursor-pointer hover:shadow-md"
                     >
                       {slot}
                     </button>
@@ -128,12 +128,12 @@ export default function GeniusBarModal() {
             </div>
 
             {/* Bottom Footer Guidelines Informative Strip */}
-            <div className="border-t border-white/5 pt-4 flex flex-col sm:flex-row justify-between sm:items-center gap-3 text-[10px] text-muted-foreground mt-4">
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 size={12} className="text-emerald-400" />
+            <div className="border-t border-zinc-100 pt-4 flex flex-col sm:flex-row justify-between sm:items-center gap-3 text-[10px] text-zinc-500 mt-4">
+              <div className="flex items-center gap-1.5 font-medium">
+                <CheckCircle2 size={12} className="text-zinc-900" />
                 <span>Sessions are complementary and include hardware profiling and transfer setup help.</span>
               </div>
-              <span className="text-[9px] font-black uppercase tracking-widest text-accent">BERRY Logistics Stack v4</span>
+              <span className="text-[9px] font-black uppercase tracking-widest text-zinc-400">BERRY Logistics Stack v4</span>
             </div>
 
           </motion.div>

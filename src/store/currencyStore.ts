@@ -8,10 +8,10 @@ interface CurrencyState {
   formatPrice: (priceInINR: number) => string;
 }
 
-const RATES: Record<CurrencyType, number> = {
-  INR: 1,
-  USD: 0.012,
-  AED: 0.044,
+const RATES = {
+  USD: 1,
+  INR: 83.5,
+  AED: 3.67,
 };
 
 const SYMBOLS: Record<CurrencyType, string> = {

@@ -7,7 +7,6 @@ import EasterEgg from './components/EasterEgg';
 import ProductCompareModal from './components/ProductCompareModal';
 import GeniusBarModal from './components/GeniusBarModal';
 import Footer from './components/Footer';
-import DevConsole from './components/DevConsole';
 import PresenceHeatmap from './components/PresenceHeatmap';
 import FluidSimulation from './components/FluidSimulation'; // ✨ Imported the high-end particle fluid core engine!
 import SupportTerminal from './components/SupportTerminal';
@@ -27,7 +26,7 @@ function App() {
         <EasterEgg />
         <ProductCompareModal />
         <GeniusBarModal />
-        <DevConsole />
+      
         <PresenceHeatmap />
         <SupportTerminal />
 

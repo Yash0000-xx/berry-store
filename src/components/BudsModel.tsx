@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { audio } from '../utils/audioEngine'; // Smooth synth sweep on click interaction
+import { audio } from '../utils/audioEngine'; 
 
 export default function BudsModel() {
   const [isOpen, setIsOpen] = useState(false);
@@ -56,44 +56,49 @@ export default function BudsModel() {
           style={{ rotateX, rotateY }}
         >
           
-          {/* ==================== WIRELESS CHARGING CASE (BACK ENGINE LAYER) ==================== */}
-          <div className="absolute h-48 w-60 rounded-[56px] bg-gradient-to-b from-[#25183a] to-[#0d0714] border-[5px] border-[#372654] shadow-[0_30px_60px_rgba(0,0,0,0.6)] flex flex-col items-center justify-between p-4 [transform:translateZ(0px)] z-10">
+          {/* ✨ HIGH-KEY MINIMALIST: Ambient Floor Shadow Added Here */}
+          <div className="absolute -bottom-14 h-12 w-56 rounded-[100%] bg-zinc-900/15 blur-xl [transform:translateZ(-30px)] pointer-events-none mix-blend-multiply" />
+
+          {/* ==================== HIGH-KEY MINIMALIST CASE (BACK ENGINE LAYER) ==================== */}
+          <div className="absolute h-48 w-60 rounded-[56px] bg-gradient-to-b from-white to-zinc-50 border-[5px] border-zinc-200 shadow-[0_30px_60px_rgba(0,0,0,0.08)] flex flex-col items-center justify-between p-4 [transform:translateZ(0px)] z-10 transition-colors">
             {/* Soft Metallic Lid Line Crevice split */}
-            <div className="w-full h-[3px] bg-black/40 mt-12 rounded-full border-b border-white/5" />
+            <div className="w-full h-[3px] bg-zinc-200 mt-12 rounded-full border-b border-white" />
             
             {/* Mini HUD Status Indicator Text */}
-            <div className="text-[7px] font-mono font-black tracking-widest text-white/30 uppercase text-center mt-4">
+            <div className="text-[7px] font-mono font-black tracking-widest text-zinc-400 uppercase text-center mt-4">
               {isOpen ? "Ecosystem Unlocked" : "Click to Deploy Buds"}
             </div>
 
             {/* Glowing LED Core Battery Status Indicator Node */}
-            <div className={`h-2 w-2 rounded-full shadow-lg transition-all duration-300 mb-4 ${
-              isOpen ? 'bg-cyan-400 shadow-[#22d3ee]' : 'bg-purple-500 shadow-purple-500/80 animate-pulse'
+            <div className={`h-2 w-2 rounded-full transition-all duration-300 mb-4 ${
+              isOpen 
+                ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]' 
+                : 'bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.4)] animate-pulse'
             }`} />
           </div>
-
 
           {/* ==================== LEFT FLOATING EARBUD ==================== */}
           <motion.div 
             className="absolute h-24 w-16 [transform-style:preserve-3d]"
             animate={{ 
-              left: isOpen ? '24px' : '75px', // Shift outward laterally on deploy
-              scale: isOpen ? 1 : 0.82,       // Compress sizes when stored inside
-              opacity: isOpen ? 1 : 0.35,      // Dim depth layer visually
-              z: isOpen ? 80 : -10            // Elevate on Z-plane to hover above lid frame
+              left: isOpen ? '24px' : '75px', 
+              scale: isOpen ? 1 : 0.82,       
+              opacity: isOpen ? 1 : 0.25,      
+              z: isOpen ? 80 : -10            
             }}
             style={{ y: leftBudY, rotateZ: budsRotate }}
             transition={{ type: 'spring', stiffness: 120, damping: 16 }}
           >
-            {/* Bud Tip Head Shape */}
-            <div className="absolute top-0 right-0 h-14 w-14 rounded-full bg-gradient-to-br from-[#4c2d7a] to-[#1a0e2b] border border-white/10 shadow-2xl flex items-center justify-center">
-              <div className="h-8 w-8 rounded-full bg-black/80 border border-purple-950/40 shadow-inner flex items-center justify-center">
-                <div className="h-4 w-4 rounded-full bg-[#12071f]" />
+            {/* Bud Tip Head Shape - White Ceramic */}
+            <div className="absolute top-0 right-0 h-14 w-14 rounded-full bg-gradient-to-br from-white to-zinc-100 border border-zinc-200 shadow-xl flex items-center justify-center">
+              {/* Silicone Tip & Acoustic Mesh */}
+              <div className="h-8 w-8 rounded-full bg-zinc-50 border border-zinc-200 shadow-inner flex items-center justify-center">
+                <div className="h-4 w-4 rounded-full bg-zinc-800" />
               </div>
             </div>
             {/* Structural Downward Facing Mic Stem Handle */}
-            <div className="absolute bottom-2 right-2 h-14 w-5 rounded-full bg-gradient-to-b from-[#4c2d7a] to-[#12071f] border-x border-b border-white/5 shadow-md flex flex-col justify-end p-1">
-              <div className="h-1.5 w-full rounded-full bg-black/60" />
+            <div className="absolute bottom-2 right-2 h-14 w-5 rounded-full bg-gradient-to-b from-white to-zinc-100 border-x border-b border-zinc-200 shadow-sm flex flex-col justify-end p-1">
+              <div className="h-1.5 w-full rounded-full bg-zinc-300" />
             </div>
           </motion.div>
 
@@ -104,21 +109,22 @@ export default function BudsModel() {
             animate={{ 
               right: isOpen ? '24px' : '75px', 
               scale: isOpen ? 1 : 0.82,
-              opacity: isOpen ? 1 : 0.35,
+              opacity: isOpen ? 1 : 0.25,
               z: isOpen ? 80 : -10
             }}
             style={{ y: rightBudY, rotateZ: budsRotate, scaleX: -1 }}
             transition={{ type: 'spring', stiffness: 120, damping: 16 }}
           >
-            {/* Bud Tip Head Shape */}
-            <div className="absolute top-0 right-0 h-14 w-14 rounded-full bg-gradient-to-br from-[#4c2d7a] to-[#1a0e2b] border border-white/10 shadow-2xl flex items-center justify-center">
-              <div className="h-8 w-8 rounded-full bg-black/80 border border-purple-950/40 shadow-inner flex items-center justify-center">
-                <div className="h-4 w-4 rounded-full bg-[#12071f]" />
+            {/* Bud Tip Head Shape - White Ceramic */}
+            <div className="absolute top-0 right-0 h-14 w-14 rounded-full bg-gradient-to-br from-white to-zinc-100 border border-zinc-200 shadow-xl flex items-center justify-center">
+              {/* Silicone Tip & Acoustic Mesh */}
+              <div className="h-8 w-8 rounded-full bg-zinc-50 border border-zinc-200 shadow-inner flex items-center justify-center">
+                <div className="h-4 w-4 rounded-full bg-zinc-800" />
               </div>
             </div>
             {/* Downward Facing Mic Stem Handle */}
-            <div className="absolute bottom-2 right-2 h-14 w-5 rounded-full bg-gradient-to-b from-[#4c2d7a] to-[#12071f] border-x border-b border-white/5 shadow-md flex flex-col justify-end p-1">
-              <div className="h-1.5 w-full rounded-full bg-black/60" />
+            <div className="absolute bottom-2 right-2 h-14 w-5 rounded-full bg-gradient-to-b from-white to-zinc-100 border-x border-b border-zinc-200 shadow-sm flex flex-col justify-end p-1">
+              <div className="h-1.5 w-full rounded-full bg-zinc-300" />
             </div>
           </motion.div>
 

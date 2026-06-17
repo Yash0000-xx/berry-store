@@ -59,5 +59,65 @@ export const products: Product[] = [
     storage: ["256GB", "512GB", "1TB"],
     tagline: "Welcome to the era of spatial entertainment.",
     image: "https://images.unsplash.com/photo-1622979135225-d2ba269cf1ac?w=600&auto=format&fit=crop&q=80"
+  },
+  {
+    id: "berrypad",
+    name: "BerryPad",
+    category: "tab",
+    price: 150000,
+    colors: ["#F5F5F7", "#2C2C2E", "#7B2FBE"],
+    storage: ["256GB", "512GB", "1TB"],
+    tagline: "Boundless power. Incredibly thin. Total creative freedom.",
+    image: "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/ipad-mini-finish-unselect-gallery-1-202410?wid=5120&hei=2880&fmt=webp&qlt=90&.v=eDJDc00wczl1QWk5QmpVYitFNXQwOVgrSXpWVEhWaW9YTGlWRHFoSHU0L1BqbTR3VEdKRWdqMUVib1BPSWdhYWd2S3NaRzcrU0dmYjNHTUFiMnlsWFUxSlgrVWMrMzU1OXo2c2JyNjJZTGdyNS9FSzFhNVRJSXdZQnFCMkJ5K2E&traceId=1"
+  },
+  {
+    id: "magsafecharger",
+    name: "MagSafe Charger",
+    category: "accessories",
+    price: 4500,
+    colors: ["#FFFFFF"],
+    storage: [],
+    tagline: "Snap on for faster wireless charging.",
+    image: "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/MGD74?wid=532&hei=582&fmt=png-alpha&.v=Nm9pdHNQWlpqeUxJK05lY2hoUkdzZ0hqc0NvK2RZTVd5TWVhUDFuQlo0MzNKK09jOHUreEYvZnpSQUVFYUZBZnpxVmhFdC9yK2RzT3FKL1lsOVpPbVE"
+  },
+  {
+    id: "airtag1",
+    name: "AirTag",
+    category: "accessories",
+    price: 3790,
+    colors: ["#FFFFFF"],
+    storage: [],
+    tagline: "Lose your knack for losing things.",
+    image: "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/airtag-4pack-select-202601_GEO_IN?wid=532&hei=582&fmt=png-alpha&.v=QVI2eUgvdU1qT1VRdEZUOXVUVHgrWG4vOTFXQ0RXTHAyUGJ2QnEvejJSamxqREhtMytBVUhNVnhoTDFZSDI2VnAxemF2anFla0E2R0xKdlltYU9XUTN6aHlnMFRsSlRZRk8wQ0pRT3pHQWgrYWpGdS9XeFgvbS9ITnNYOEhYaG4"
+  },
+  {
+    id: "30wadapter",
+    name: "30W USB-C Power Adapter",
+    category: "accessories",
+    price: 3800,
+    colors: ["#FFFFFF"],
+    storage: [],
+    tagline: "Compact and efficient charging at home or office.",
+    image: "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/MY1W2_GEO_IN?wid=532&hei=582&fmt=png-alpha&.v=QXpNQVc2djBEbjNUUFZnQWhTMlAvTW5GeFlBNUZ4MVNzNjJzZFhYMTFSanVnZHBjTzh5d2huWkZTclZJejBITG5Rb0tEQlVMN0l3TC9qdEpPMlNGeEE"
+  },
+  {
+    id: "studiodisplay",
+    name: "Berry Studio Display",
+    category: "accessories",
+    price: 159900,
+    colors: ["#E5E7EB"],
+    storage: [],
+    tagline: "Immersive 27-inch 5K Retina display.",
+    image: "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/MFEW4?wid=532&hei=582&fmt=png-alpha&.v=L0dURC91cFIxNjVzZmhWTTNzOTdTZ0hqc0NvK2RZTVd5TWVhUDFuQlo0MG91QkNNSkV3OEg0bEdUbWNzMm9mRC85TFIvY2xoL3VaSnpkWldSSEQzNkE"
+  },
+  {
+    id: "smartscale",
+    name: "Berry's Veiled Grey Nike Sport Loop",
+    category: "accessories",
+    price: 12900,
+    colors: ["#1A1A1A", "#FFFFFF"],
+    storage: [],
+    tagline: "Track your health metrics with clinical precision.",
+    image: "https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/MGD44?wid=532&hei=582&fmt=png-alpha&.v=YmZWcHYxOEFxK1NwTXBjOHg0NjhCZ0hqc0NvK2RZTVd5TWVhUDFuQlo0MDM2d2RLWmZBYXVXSWdYQml3SC9hNkZIVDNwUVhMbndIUnMrNmZIclQ5WkE"
   }
 ];
